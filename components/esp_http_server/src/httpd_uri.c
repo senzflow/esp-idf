@@ -179,6 +179,9 @@ static httpd_uri_t* httpd_find_uri_handler2(httpd_err_resp_t *err,
     return NULL;
 }
 
+//senzflow!
+httpd_notfound_func_t notfound_fn = NULL;
+
 esp_err_t httpd_uri(struct httpd_data *hd)
 {
     httpd_uri_t            *uri = NULL;
@@ -201,6 +204,12 @@ esp_err_t httpd_uri(struct httpd_data *hd)
     if (uri == NULL) {
         switch (err) {
             case HTTPD_404_NOT_FOUND:
+                //senzflow!
+                if (notfound_fn && (res->field_set & (1 << UF_PATH))) {
+                    notfound_fn(req, req->uri + res->field_data[UF_PATH].off,
+                                res->field_data[UF_PATH].len);
+                    return ESP_OK;
+                }
                 ESP_LOGW(TAG, LOG_FMT("URI '%s' not found"), req->uri);
                 return httpd_resp_send_err(req, HTTPD_404_NOT_FOUND);
             case HTTPD_405_METHOD_NOT_ALLOWED:

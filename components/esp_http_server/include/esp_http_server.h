@@ -1177,6 +1177,10 @@ typedef void (*httpd_work_fn_t)(void *arg);
  */
 esp_err_t httpd_queue_work(httpd_handle_t handle, httpd_work_fn_t work, void *arg);
 
+//senzflow!
+typedef void (*httpd_notfound_func_t)(httpd_req_t *req, const char* uri, int len);
+extern httpd_notfound_func_t notfound_fn;
+
 /** End of Group Work Queue
  * @}
  */
